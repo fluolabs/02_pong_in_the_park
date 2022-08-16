@@ -1,5 +1,6 @@
 <!-- 1. Canvas setup -->
 <!-- 2. Draw Paddles -->
+<!-- 3. Respond to user input -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +39,35 @@
       c.fillStyle = 'white'
       c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
+
+    update() {
+      this.draw()
+      if (
+        this.position.y + this.velocity.y > 0 && 
+        this.position.y + this.height + this.velocity.y < canvas.height
+        )
+        this.position.y += this.velocity.y
+    }
   }
+
+
+  class Ball {
+    constructor({position}) {
+      this.position = position
+      this.velocity = {
+        x: 1,
+        y: 1
+      }
+
+      this.width = 5
+      this.height = 5
+    }
+
+    draw() {
+      c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+  }
+
 
   const paddle1 = new Paddle({
     position: {
@@ -53,14 +82,34 @@
       y: 100
     },
   })
-  paddle1.draw()
-  paddle2.draw()
+  
+
+  function animate() {
+    requestAnimationFrame(animate)
+    c.fillStyle = 'black'
+    c.fillRect(0, 0, canvas.width, canvas.height)
+    paddle1.update()
+    paddle2.update()
+  }
+
+  animate()
 
   addEventListener('keydown', (event) => {
+    const speed = 3
     switch (event.key) {
+      case 'w':
+        paddle1.velocity.y = -speed
+        break
       case 's':
-        // go down
-        
+        paddle1.velocity.y = speed
+        break
+
+      case 'ArrowUp':
+        paddle2.velocity.y = -speed
+        break
+      case 'ArrowDown':
+        paddle2.velocity.y = speed
+        break
     }
   })
   // c.fillStyle = 'red'
